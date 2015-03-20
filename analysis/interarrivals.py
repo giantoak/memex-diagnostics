@@ -2,25 +2,24 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+
+root_dir = '/mnt/memex-diagnostics/'
+data_dir = os.path.join(root_dir, 'data', 'dump4')
 
 # Minimum number of providers to be considered a cluster
 MIN_CLUSTER_SIZE=5
 
-df = pd.read_csv('data/doc-provider-timestamp-cluster-sorted.tsv', header=None,
-        names=['cluster_id', 'ad_id', 'timestamp'])
+df = pd.read_csv(os.path.join(data_dir,
+'made/doc-provider-sorted.tsv'), header=None,
+        names=['cluster_id', 'timestamp', 'ad_id'])
 
-# Filter DataFrame for null values
-df = df[df.cluster_id!='\N']
-df = df[df.timestamp !='\N']
+# Convert timestamp type
 df['timestamp'] = pd.to_datetime(df['timestamp'])
 
 # Filter by min cluster size
 clusters = df.groupby('cluster_id')
 df = clusters.filter(lambda x: len(x) > MIN_CLUSTER_SIZE)
-
-# Sort within clusters by timestamps
-clusters = df.groupby('cluster_id')
-df = clusters.transform(lambda x: x.sort('timestamp'))
 
 # Calculate interarrival times and convert them to days
 clusters = df.groupby('cluster_id')
@@ -46,4 +45,6 @@ def draw(dataframe, x_range, output_filename):
 
 draw(means, [0, 90], 'interarrival_means.png')
 draw(medians, [0, 90], 'interarrival_medians.png')
+
+df.to_csv(os.path.join(data_dir, 'made/timediffs.csv'), columns=['cluster_id', 'ad_id', 'diffs'])
 
