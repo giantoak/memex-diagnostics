@@ -18,4 +18,4 @@ with open(os.path.join(data_dir, 'msa_locations.tsv')) as f_ad_msas, \
         # ad is the string ad_id, msa is the full geo_id
         ad, msa = line.strip().split('\t')
         lat, lon = msa_centroids[msa]
-        f_out.write('{},{},{}\n'.format(ad, lat, lon))
+        f_out.write('{},{},{},{}\n'.format(ad, msa, lat, lon))
