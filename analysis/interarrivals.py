@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import datetime
 
 root_dir = '/mnt/memex-diagnostics/'
 data_dir = os.path.join(root_dir, 'data', 'dump4')
@@ -15,7 +16,10 @@ df = pd.read_csv(os.path.join(data_dir,
         names=['cluster_id', 'timestamp', 'ad_id'])
 
 # Convert timestamp type
-df['timestamp'] = pd.to_datetime(df['timestamp'])
+df['timestamp'] = pd.to_datetime(df['timestamp'], coerce=True)
+
+# Clean dataset of unreasonable timestamps
+df = df[df['timestamp'] > datetime.datetime(2010, 1, 1)]
 
 # Filter by min cluster size
 clusters = df.groupby('cluster_id')
