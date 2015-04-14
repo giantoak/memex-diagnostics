@@ -50,5 +50,5 @@ def draw(dataframe, x_range, output_filename):
 draw(means, [0, 90], 'interarrival_means.png')
 draw(medians, [0, 90], 'interarrival_medians.png')
 
-df.to_csv(os.path.join(data_dir, 'made/timediffs.csv'), columns=['cluster_id', 'ad_id', 'diffs'])
+df.to_csv(os.path.join(data_dir, 'made/timediffs.csv'), columns=['cluster_id', 'ad_id', 'timestamp', 'diffs'])
 
